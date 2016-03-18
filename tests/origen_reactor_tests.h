@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include "reactor.h"
+#include "origen_reactor.h"
 
 #include "context.h"
 #include "facility_tests.h"
@@ -14,7 +14,7 @@ namespace reactor {
 class reactorTest : public ::testing::Test {
  protected:
   cyclus::TestContext tc_;
-  cyborg::reactor* src_facility_;
+  cyborg::OrigenReactor* src_facility_;
 
   virtual void SetUp();
   virtual void TearDown();

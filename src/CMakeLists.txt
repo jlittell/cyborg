@@ -26,19 +26,20 @@ TARGET_LINK_LIBRARIES(OrigenInterface ${LIBS})
 
 INSTALL(
     TARGETS OrigenInterface
-    LIBRARY DESTINATION lib
-    COMPONENT OrigenInterface
+    LIBRARY DESTINATION lib/cyclus
+    ARCHIVE DESTINATION lib/cyclus
+    COMPONENT cyborg
     )
-
-
 SET(LIBS ${LIBS} OrigenInterface PARENT_SCOPE)
 
 #################################################################
 
 ### DO NOT DELETE THIS COMMENT: INSERT_ARCHETYPES_HERE ###
-USE_CYCLUS("cyborg" "reactor")
+USE_CYCLUS("cyborg" "origen_reactor")
 
 INSTALL_CYCLUS_MODULE("cyborg" "" "NONE")
+ 
+SET(TestSource ${cyborg_TEST_CC} PARENT_SCOPE)
 
 # install header files
 FILE(GLOB h_files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")

@@ -1,6 +1,8 @@
 # TODO: GTest-ify this test & add a gtest dependency
-
+     
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} "${PROJECT_SOURCE_DIR}/src")
+
+FILE(GLOB CyborgTestSource "${CMAKE_CURRENT_SOURCE_DIR}/*tests.cc")
 
 add_executable(tstCyclusOrigenInterface tst_cyclus_origen_interface.cpp )
 SET_TARGET_PROPERTIES( tstCyclusOrigenInterface
@@ -11,4 +13,3 @@ SET_TARGET_PROPERTIES( tstCyclusOrigenInterface
     CXX_STANDARD_REQUIRED ON
     )
 TARGET_LINK_LIBRARIES( tstCyclusOrigenInterface OrigenInterface ${LIBS} )
-MESSAGE("TARGETING ${LIBS}")

@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "reactor_tests.h"  
+#include "origen_reactor_tests.h"  
 
-using cyborg::reactor;
+using cyborg::OrigenReactor;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace reactor {
 
 void reactorTest::SetUp() {
-  src_facility_ = new cyborg::reactor(tc_.get());
+  src_facility_ = new cyborg::OrigenReactor(tc_.get());
   // InitParameters();
   // SetUpReactor();
 }
@@ -45,7 +45,7 @@ TEST_F(reactorTest, Tock) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Do Not Touch! Below section required for connection with Cyclus
 cyclus::Agent* reactorConstructor(cyclus::Context* ctx) {
-  return new cyborg::reactor(ctx);
+  return new cyborg::OrigenReactor(ctx);
 }
 // Required to get functionality in cyclus agent unit tests library
 #ifndef CYCLUS_AGENT_TESTS_CONNECTED

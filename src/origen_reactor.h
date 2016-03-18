@@ -7,7 +7,7 @@
 
 namespace cyborg {
 
-/// @class reactor
+/// @class OrigenReactor
 ///
 /// This Facility is intended
 /// as a skeleton to guide the implementation of new Facility
@@ -30,11 +30,12 @@ namespace cyborg {
 /// Place a description of the detailed behavior of the agent. Consider
 /// describing the behavior at the tick and tock as well as the behavior
 /// upon sending and receiving materials and messages.
-class reactor : public cyclus::Facility  {
+class OrigenReactor : public cyclus::Facility, public cyclus::toolkit::CommodityProducer {
  public:
   /// Constructor for reactor Class
   /// @param ctx the cyclus context for access to simulation-wide parameters
-  explicit reactor(cyclus::Context* ctx);
+  explicit OrigenReactor(cyclus::Context* ctx);
+  //OrigenReactor(cyclus::Context* ctx);
 
   /// The Prime Directive
   /// Generates code that handles all input file reading and restart operations
@@ -42,10 +43,9 @@ class reactor : public cyclus::Facility  {
   /// @warning The Prime Directive must have a space before it! (A fix will be
   /// in 2.0 ^TM)
 
-  #pragma cyclus
-
   #pragma cyclus note {"doc": "A stub facility is provided as a skeleton for the design of new facility agents."}
 
+  //#pragma cyclus decl
   /// A verbose printer for the reactor
   virtual std::string str();
 
@@ -65,6 +65,8 @@ class reactor : public cyclus::Facility  {
   virtual void Discharge_(double);
 
   virtual cyclus::Material::Ptr Deplete_(cyclus::Material::Ptr);
+
+  #pragma cyclus
 
   int reactor_time;
   bool decom;

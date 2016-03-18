@@ -1,19 +1,19 @@
-#include "reactor.h"
+#include "origen_reactor.h"
 
 namespace cyborg {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-reactor::reactor(cyclus::Context* ctx) : cyclus::Facility(ctx), reactor_time(1), decom(false) {
+OrigenReactor::OrigenReactor(cyclus::Context* ctx) : cyclus::Facility(ctx), reactor_time(1), decom(false) {
 	
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string reactor::str() {
+std::string OrigenReactor::str() {
   return Facility::str();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void reactor::EnterNotify(){
+void OrigenReactor::EnterNotify(){
 	Facility::EnterNotify();
 	buy_policy.Init(this, &fresh_inventory, std::string("fresh_inventory"));
 	buy_policy.Set(fresh_fuel).Start();
@@ -22,7 +22,7 @@ void reactor::EnterNotify(){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void reactor::Tick() {
+void OrigenReactor::Tick() {
 	if (!decom) {
 		fuel.capacity(fuel_capacity*1000);
 		fresh_inventory.capacity(fuel.space());
@@ -33,7 +33,7 @@ void reactor::Tick() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void reactor::Tock() {
+void OrigenReactor::Tock() {
 	// Only continue to operate if not exceeding reactor lifetime
 	if (!decom) {
 		// Load Fuel
@@ -50,14 +50,14 @@ void reactor::Tock() {
 	}
 }
 
-void reactor::Load_() {
+void OrigenReactor::Load_() {
 	if (fuel.space() > 0){
 		// Push material to fuel buffer from fresh inventory
 		fuel.Push(fresh_inventory.Pop(fresh_inventory.quantity()));
 	}
 }
 
-void reactor::Discharge_(double core_fraction) {
+void OrigenReactor::Discharge_(double core_fraction) {
 	// Pop 1/3 of core from fuel buffer (except on retiring time step)
 	cyclus::Material::Ptr to_burn = fuel.Pop(fuel.capacity()/core_fraction);
 
@@ -68,7 +68,7 @@ void reactor::Discharge_(double core_fraction) {
 	spent_inventory.Push(to_burn);
 }
 
-cyclus::Material::Ptr reactor::Deplete_(cyclus::Material::Ptr mat) {
+cyclus::Material::Ptr OrigenReactor::Deplete_(cyclus::Material::Ptr mat) {
 	std::vector<int> in_ids;
 
 	// Get fuel recipe and convert to ORIGEN format
@@ -105,7 +105,7 @@ cyclus::Material::Ptr reactor::Deplete_(cyclus::Material::Ptr mat) {
 }
 
 extern "C" cyclus::Agent* Constructreactor(cyclus::Context* ctx) {
-  return new reactor(ctx);
+  return new OrigenReactor(ctx);
 }
 
 }  // namespace cyborg

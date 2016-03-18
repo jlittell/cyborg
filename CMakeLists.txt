@@ -152,10 +152,45 @@ INCLUDE_DIRECTORIES(${STUB_INCLUDE_DIRS})
 # add the agents
 ADD_SUBDIRECTORY(src)
 
-# add tests for the ORIGEN interface
-enable_testing()
-ADD_SUBDIRECTORY(src/tests)
-ADD_TEST( NAME tstOrigenInterface COMMAND tstCyclusOrigenInterface )
+# add tests for the ORIGEN interface & CyBORG
+ enable_testing()
+ ADD_SUBDIRECTORY(tests)
+ ADD_TEST( NAME tstOrigenInterface COMMAND tstCyclusOrigenInterface )
+ ADD_TEST( NAME CyborgUnitTests COMMAND cyborg_unit_tests )
+
+# Build cyborg_unit_tests
+
+ SET(TestSource
+     ${TestSource}
+     ${CYBORG_TEST_CORE}
+    )
+
+ ADD_EXECUTABLE(cyborg_unit_tests
+     tests/cyborg_unit_test_driver.cc
+     ${TestSource}
+     )
+
+ SET_TARGET_PROPERTIES( cyborg_unit_tests
+    PROPERTIES
+    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib"
+    LINKER_LANGUAGE CXX
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
+    )
+ TARGET_LINK_LIBRARIES(cyborg_unit_tests
+     dl ${LIBS} OrigenInterface ${CYCLUS_TEST_LIBRARIES})
+ MESSAGE("cyborg_unit_test libs: ${LIBS} OrigenInterface ${CYCLUS_TEST_LIBRARIES}")
+
+ INSTALL(TARGETS cyborg_unit_tests
+    RUNTIME DESTINATION bin
+    COMPONENT testing
+    )
+
+ FIND_PACKAGE(Threads)
+ IF(CMAKE_USE_PTHREADS_INIT)  # The pthreads library is available.
+     SET(cxx_base_flags "${cxx_base_flags} -DGTEST_HAS_PTHREAD=1")
+ ENDIF()
+
 
 # uninstall target
 configure_file(
